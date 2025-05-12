@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <meta charset='UTF-8'>
+    <title>Purple Days</title>
+    <link rel='stylesheet' href='/static/styles.css'>
+</head>
+<body>
+<h1>Purple Days Schedule</h1>
+<table>
+<thead>
+<tr>
+    <th>Original Date</th>
+    <th>New Date</th>
+    <th>Status</th>
+    <th>Action</th>
+</tr>
+</thead>
+<tbody>
+{% for pd in purple_days %}
+<tr>
+    <td>{{ pd.date }}</td>
+    <td>{{ pd.new_date }}</td>
+    <td>{{ pd.status }}</td>
+    <td>
+        {% if pd.status != 'Canceled' %}
+        <form action='/reschedule/{{ pd.id }}' method='post'>
+            <input type='date' name='new_date' required>
+            <button type='submit'>Change</button>
+        </form>
+        {% endif %}
+    </td>
+</tr>
+{% endfor %}
+</tbody>
+</table>
+</body>
+</html>

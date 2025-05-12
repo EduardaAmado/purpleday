@@ -6,9 +6,9 @@ from email.message import EmailMessage
 # ----------------- DB Connections -----------------
 def get_connection(database="smb_grafana"):
     return mysql.connector.connect(
-        host="localhost",
-        user="root",
-        password="",
+        host = "localhost",
+        user = "root",
+        password = "",
         database=database
     )
 
@@ -22,7 +22,7 @@ def generate_purple_days(start_date, weeks=2):
 
     cursor.execute("DELETE FROM purple_days")
 
-    current_weekday = 2  # Wednesday
+    current_weekday = 26  # Wednesday
     date_cursor = start_date
     count = 0
 
@@ -95,8 +95,8 @@ Sistema Purple Day"""
     msg.set_content(content)
     msg['Subject'] = subject
     msg['From'] = sender
-    msg['To'] = ", ".join(to_receivers)
-    msg['Cc'] = ", ".join(cc_receivers)
+    msg['To'] = "teste@example.com"
+    msg['Cc'] = "teste@example.com"
 
     all_recipients = to_receivers + cc_receivers
 
@@ -110,14 +110,14 @@ def check_purple_conflicts():
     cursor = conn.cursor(dictionary=True)
 
     today = datetime.now().date()
-    target_date = today + timedelta(days=7)
     holidays = get_holidays()
 
     cursor.execute("SELECT id, date FROM purple_days")
     purple_days = cursor.fetchall()
 
     for pd in purple_days:
-        if pd["date"] == target_date and pd["date"] in holidays:
+        days_until = (pd["date"] - today).days
+        if 7 <= days_until <= 14 and pd["date"] in holidays:
             send_email_notice(pd["date"])
 
     cursor.close()
